@@ -4,6 +4,7 @@ export type Position = [number, number];
 export class Rover {
     private position: Position;
     private direction: Direction;
+    private static readonly DIRECTIONS: Direction[] = ['N', 'E', 'S', 'W'];
 
     constructor(position: Position, direction: Direction) {
         this.position = position;
@@ -26,18 +27,20 @@ export class Rover {
         this.direction = direction;
     }
 
-    public turnLeft(): void {
-        if (this.direction === 'N') this.direction = 'W';
-        else if (this.direction === 'W') this.direction = 'S';
-        else if (this.direction === 'S') this.direction = 'E';
-        else if (this.direction === 'E') this.direction = 'N';
+    private turn(clockwise: boolean): void {
+        const currentIndex = Rover.DIRECTIONS.indexOf(this.direction);
+        const length = Rover.DIRECTIONS.length;
+        const newIndex = clockwise
+            ? (currentIndex + 1) % length
+            : (currentIndex - 1 + length) % length;
+        this.direction = Rover.DIRECTIONS[newIndex];
     }
 
-    public turnRight(): void {
-        if (this.direction === 'N') this.direction = 'E';
-        else if (this.direction === 'E') this.direction = 'S';
-        else if (this.direction === 'S') this.direction = 'W';
-        else if (this.direction === 'W') this.direction = 'N';
+    turnLeft(): void {
+        this.turn(false);
     }
 
+    turnRight(): void {
+        this.turn(true);
+    }
 }
