@@ -33,6 +33,10 @@ export class Rover {
         this.direction = direction;
     }
 
+    public static getDirections(): Direction[] {
+        return Rover.DIRECTIONS;
+    }
+
     private turn(clockwise: boolean): void {
         const currentIndex = Rover.DIRECTIONS.indexOf(this.direction);
         const length = Rover.DIRECTIONS.length;
