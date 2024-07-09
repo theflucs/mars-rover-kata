@@ -25,4 +25,19 @@ export class Rover {
     public setDirection(direction: Direction): void {
         this.direction = direction;
     }
+
+    public turnLeft(): void {
+        if (this.direction === 'N') this.direction = 'W';
+        else if (this.direction === 'W') this.direction = 'S';
+        else if (this.direction === 'S') this.direction = 'E';
+        else if (this.direction === 'E') this.direction = 'N';
+    }
+
+    public turnRight(): void {
+        if (this.direction === 'N') this.direction = 'E';
+        else if (this.direction === 'E') this.direction = 'S';
+        else if (this.direction === 'S') this.direction = 'W';
+        else if (this.direction === 'W') this.direction = 'N';
+    }
+
 }
