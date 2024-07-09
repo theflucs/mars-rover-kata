@@ -7,13 +7,13 @@ export class Rover {
     private gridSize: [number, number];
     private obstacles: Position[];
 
-    private static readonly DIRECTIONS: Direction[] = ['N', 'E', 'S', 'W'];
-    private static readonly MOVEMENTS: Record<Direction, Position> = {
-        'N': [0, 1],
-        'E': [1, 0],
-        'S': [0, -1],
-        'W': [-1, 0]
-    };
+    private static readonly DIRECTIONS: ReadonlyArray<Direction> = ['N', 'E', 'S', 'W'];
+    private static readonly MOVEMENTS: ReadonlyMap<Direction, Position> = new Map([
+        ['N', [0, 1]],
+        ['E', [1, 0]],
+        ['S', [0, -1]],
+        ['W', [-1, 0]]
+    ]);
 
     constructor(position: Position, direction: Direction, gridSize: [number, number] = [5, 4], obstacles: Position[] = []) {
         this.position = position;
@@ -36,10 +36,6 @@ export class Rover {
 
     public setDirection(direction: Direction): void {
         this.direction = direction;
-    }
-
-    public static getDirections(): Direction[] {
-        return Rover.DIRECTIONS;
     }
 
     private isObstacle(position: Position): boolean {
@@ -66,7 +62,7 @@ export class Rover {
     }
 
     private move(forward: boolean): void {
-        const [dx, dy] = Rover.MOVEMENTS[this.direction];
+        const [dx, dy] = Rover.MOVEMENTS.get(this.direction) || [0, 0];
         const [x, y] = this.position;
 
         const nextX = x + (forward ? dx : -dx);
