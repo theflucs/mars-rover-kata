@@ -29,25 +29,39 @@ describe('class rover', () => {
         expect(rover.getDirection()).toEqual(newDirection);
     });
 
-    it('should turn left correctly', () => {
-        rover.turnLeft();
-        expect(rover.getDirection()).toEqual('W');
-        rover.turnLeft();
-        expect(rover.getDirection()).toEqual('S');
-        rover.turnLeft();
-        expect(rover.getDirection()).toEqual('E');
-        rover.turnLeft();
-        expect(rover.getDirection()).toEqual('N');
+    it('should move forward correctly', () => {
+        rover.moveForward();
+        expect(rover.getPosition()).toEqual([0, 1]);
+
+        rover.setDirection('E');
+        rover.moveForward();
+        expect(rover.getPosition()).toEqual([1, 1]);
+
+        rover.setDirection('S');
+        rover.moveForward();
+        expect(rover.getPosition()).toEqual([1, 0]);
+
+        rover.setDirection('W');
+        rover.moveForward();
+        expect(rover.getPosition()).toEqual([0, 0]);
     });
 
-    it('should turn right correctly', () => {
-        rover.turnRight();
-        expect(rover.getDirection()).toEqual('E');
-        rover.turnRight();
-        expect(rover.getDirection()).toEqual('S');
-        rover.turnRight();
-        expect(rover.getDirection()).toEqual('W');
-        rover.turnRight();
-        expect(rover.getDirection()).toEqual('N');
+    it('should move backward correctly', () => {
+        rover.moveBackward();
+        expect(rover.getPosition()).toEqual([0, -1]);
+
+        rover.setDirection('E');
+        rover.moveBackward();
+        expect(rover.getPosition()).toEqual([-1, -1]);
+
+        rover.setDirection('S');
+        rover.moveBackward();
+        expect(rover.getPosition()).toEqual([-1, 0]);
+
+        rover.setDirection('W');
+        rover.moveBackward();
+        expect(rover.getPosition()).toEqual([0, 0]);
     });
+
 });
+

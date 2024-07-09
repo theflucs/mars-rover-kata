@@ -43,4 +43,41 @@ export class Rover {
     turnRight(): void {
         this.turn(true);
     }
+
+
+    moveForward(): void {
+        const [x, y] = this.position;
+        switch (this.direction) {
+            case 'N':
+                this.position = [x, y + 1];
+                break;
+            case 'E':
+                this.position = [x + 1, y];
+                break;
+            case 'S':
+                this.position = [x, y - 1];
+                break;
+            case 'W':
+                this.position = [x - 1, y];
+                break;
+        }
+    }
+
+    moveBackward(): void {
+        const [x, y] = this.position;
+        switch (this.direction) {
+            case 'N':
+                this.position = [x, y - 1];
+                break;
+            case 'E':
+                this.position = [x - 1, y];
+                break;
+            case 'S':
+                this.position = [x, y + 1];
+                break;
+            case 'W':
+                this.position = [x + 1, y];
+                break;
+        }
+    }
 }
