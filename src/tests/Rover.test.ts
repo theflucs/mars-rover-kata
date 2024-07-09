@@ -35,26 +35,14 @@ describe('Rover class', () => {
     });
 
     describe('turning', () => {
-        it('should turn left correctly', () => {
-            rover.turnLeft();
-            expect(rover.getDirection()).toEqual('W');
-            rover.turnLeft();
-            expect(rover.getDirection()).toEqual('S');
-            rover.turnLeft();
-            expect(rover.getDirection()).toEqual('E');
-            rover.turnLeft();
-            expect(rover.getDirection()).toEqual('N');
-        });
-
-        it('should turn right correctly', () => {
-            rover.turnRight();
-            expect(rover.getDirection()).toEqual('E');
-            rover.turnRight();
-            expect(rover.getDirection()).toEqual('S');
-            rover.turnRight();
-            expect(rover.getDirection()).toEqual('W');
-            rover.turnRight();
-            expect(rover.getDirection()).toEqual('N');
+        test.each<[string, 'turnLeft' | 'turnRight', Direction[]]>([
+            ['left', 'turnLeft', ['W', 'S', 'E', 'N']],
+            ['right', 'turnRight', ['E', 'S', 'W', 'N']]
+        ])('should turn %s correctly', (_, turnMethod, expectedDirections) => {
+            expectedDirections.forEach(expectedDirection => {
+                rover[turnMethod]();
+                expect(rover.getDirection()).toEqual(expectedDirection);
+            });
         });
     });
 
