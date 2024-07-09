@@ -75,7 +75,11 @@ export class Rover {
         const wrappedX = (nextX + this.gridSize[0]) % this.gridSize[0];
         const wrappedY = (nextY + this.gridSize[1]) % this.gridSize[1];
 
-        this.position = [wrappedX, wrappedY];
+        const nextPosition: Position = [wrappedX, wrappedY];
+
+        if (!this.isObstacle(nextPosition)) {
+            this.position = nextPosition;
+        }
     }
 
     moveForward(): void {
