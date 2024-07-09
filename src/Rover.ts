@@ -47,9 +47,9 @@ export class Rover {
     private turn(clockwise: boolean): void {
         const currentIndex = Rover.DIRECTIONS.indexOf(this.direction);
         const length = Rover.DIRECTIONS.length;
-        const newIndex = clockwise
-            ? (currentIndex + 1) % length
-            : (currentIndex - 1 + length) % length;
+
+        const newIndex = (currentIndex + (clockwise ? 1 : -1) + length) % length;
+
         this.direction = Rover.DIRECTIONS[newIndex];
     }
 
