@@ -46,6 +46,30 @@ describe('Rover class', () => {
         });
     });
 
+    describe('rover getNextPosition', () => {
+        let rover: Rover;
+        const gridSize: [number, number] = [5, 4];
+        const obstacles: Position[] = [];
+
+        beforeEach(() => {
+            rover = new Rover([0, 0], 'N', gridSize, obstacles);
+        });
+
+        it('should calculate the next position moving forward', () => {
+            expect(rover['getNextPosition'](true)).toEqual([0, 1]);
+        });
+
+        it('should calculate the next position moving backward', () => {
+            expect(rover['getNextPosition'](false)).toEqual([0, 3]);
+        });
+
+        it('should wrap around the grid boundaries: pacman effect', () => {
+            rover.setPosition([4, 3]);
+            rover.setDirection('E');
+            expect(rover['getNextPosition'](true)).toEqual([0, 3]);
+        });
+    });
+
     describe('moving', () => {
         test.each<[string, 'moveForward' | 'moveBackward', Direction, Position]>([
             ['forward', 'moveForward', 'N', [0, 1]],

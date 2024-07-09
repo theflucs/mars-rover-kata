@@ -61,7 +61,7 @@ export class Rover {
         this.turn(true);
     }
 
-    private move(forward: boolean): void {
+    private getNextPosition(forward: boolean): Position {
         const [dx, dy] = Rover.MOVEMENTS.get(this.direction) || [0, 0];
         const [x, y] = this.position;
 
@@ -71,7 +71,11 @@ export class Rover {
         const wrappedX = (nextX + this.gridSize[0]) % this.gridSize[0];
         const wrappedY = (nextY + this.gridSize[1]) % this.gridSize[1];
 
-        const nextPosition: Position = [wrappedX, wrappedY];
+        return [wrappedX, wrappedY];
+    }
+
+    private move(forward: boolean): void {
+        const nextPosition = this.getNextPosition(forward);
 
         if (!this.isObstacle(nextPosition)) {
             this.position = nextPosition;
