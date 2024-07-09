@@ -47,38 +47,19 @@ describe('Rover class', () => {
     });
 
     describe('moving', () => {
-        it('should move forward correctly', () => {
-            rover.moveForward();
-            expect(rover.getPosition()).toEqual([0, 1]);
-
-            rover.setDirection('E');
-            rover.moveForward();
-            expect(rover.getPosition()).toEqual([1, 1]);
-
-            rover.setDirection('S');
-            rover.moveForward();
-            expect(rover.getPosition()).toEqual([1, 0]);
-
-            rover.setDirection('W');
-            rover.moveForward();
-            expect(rover.getPosition()).toEqual([0, 0]);
-        });
-
-        it('should move backward correctly', () => {
-            rover.moveBackward();
-            expect(rover.getPosition()).toEqual([0, -1]);
-
-            rover.setDirection('E');
-            rover.moveBackward();
-            expect(rover.getPosition()).toEqual([-1, -1]);
-
-            rover.setDirection('S');
-            rover.moveBackward();
-            expect(rover.getPosition()).toEqual([-1, 0]);
-
-            rover.setDirection('W');
-            rover.moveBackward();
-            expect(rover.getPosition()).toEqual([0, 0]);
+        test.each<[string, 'moveForward' | 'moveBackward', Direction, Position]>([
+            ['forward', 'moveForward', 'N', [0, 1]],
+            ['forward', 'moveForward', 'E', [1, 0]],
+            ['forward', 'moveForward', 'S', [0, -1]],
+            ['forward', 'moveForward', 'W', [-1, 0]],
+            ['backward', 'moveBackward', 'N', [0, -1]],
+            ['backward', 'moveBackward', 'E', [-1, 0]],
+            ['backward', 'moveBackward', 'S', [0, 1]],
+            ['backward', 'moveBackward', 'W', [1, 0]],
+        ])('should move %s correctly when facing %s', (_, moveMethod, direction, expectedPosition) => {
+            rover = new Rover(initialPosition, direction);
+            rover[moveMethod]();
+            expect(rover.getPosition()).toEqual(expectedPosition);
         });
     });
 });
