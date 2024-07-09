@@ -5,6 +5,12 @@ export class Rover {
     private position: Position;
     private direction: Direction;
     private static readonly DIRECTIONS: Direction[] = ['N', 'E', 'S', 'W'];
+    private static readonly MOVEMENTS: Record<Direction, Position> = {
+        'N': [0, 1],
+        'E': [1, 0],
+        'S': [0, -1],
+        'W': [-1, 0]
+    };
 
     constructor(position: Position, direction: Direction) {
         this.position = position;
@@ -45,39 +51,20 @@ export class Rover {
     }
 
 
-    moveForward(): void {
+    private move(forward: boolean): void {
+        const [dx, dy] = Rover.MOVEMENTS[this.direction];
         const [x, y] = this.position;
-        switch (this.direction) {
-            case 'N':
-                this.position = [x, y + 1];
-                break;
-            case 'E':
-                this.position = [x + 1, y];
-                break;
-            case 'S':
-                this.position = [x, y - 1];
-                break;
-            case 'W':
-                this.position = [x - 1, y];
-                break;
-        }
+        this.position = [
+            x + (forward ? dx : -dx),
+            y + (forward ? dy : -dy)
+        ];
+    }
+
+    moveForward(): void {
+        this.move(true);
     }
 
     moveBackward(): void {
-        const [x, y] = this.position;
-        switch (this.direction) {
-            case 'N':
-                this.position = [x, y - 1];
-                break;
-            case 'E':
-                this.position = [x - 1, y];
-                break;
-            case 'S':
-                this.position = [x, y + 1];
-                break;
-            case 'W':
-                this.position = [x + 1, y];
-                break;
-        }
+        this.move(false);
     }
 }
