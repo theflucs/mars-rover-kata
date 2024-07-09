@@ -4,6 +4,8 @@ export type Position = [number, number];
 export class Rover {
     private position: Position;
     private direction: Direction;
+    private gridSize: [number, number];
+
     private static readonly DIRECTIONS: Direction[] = ['N', 'E', 'S', 'W'];
     private static readonly MOVEMENTS: Record<Direction, Position> = {
         'N': [0, 1],
@@ -12,9 +14,10 @@ export class Rover {
         'W': [-1, 0]
     };
 
-    constructor(position: Position, direction: Direction) {
+    constructor(position: Position, direction: Direction, gridSize: [number, number] = [5, 4]) {
         this.position = position;
         this.direction = direction;
+        this.gridSize = gridSize;
     }
 
     public getPosition(): Position {
@@ -59,8 +62,8 @@ export class Rover {
         const [dx, dy] = Rover.MOVEMENTS[this.direction];
         const [x, y] = this.position;
         this.position = [
-            x + (forward ? dx : -dx),
-            y + (forward ? dy : -dy)
+            (x + (forward ? dx : -dx) + this.gridSize[0]) % this.gridSize[0],
+            (y + (forward ? dy : -dy) + this.gridSize[1]) % this.gridSize[1]
         ];
     }
 
