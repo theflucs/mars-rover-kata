@@ -83,7 +83,7 @@ describe('Rover class', () => {
         });
     });
 
-    describe('pacman effect', () => {
+    describe('pacman effect: wrap around grid boundaries', () => {
         let rover: Rover;
         const gridSize: [number, number] = [5, 4];
 
