@@ -59,279 +59,63 @@ describe('Rover class', () => {
         });
     });
 
-    describe('pac-man effect move forward', () => {
+    describe('pacman effect', () => {
+        let rover: Rover;
+        const gridSize: [number, number] = [5, 4];
+
         beforeEach(() => {
-            rover = new Rover(initialPosition, initialDirection, [5, 4]);
-            rover.setDirection('N');
-        });
-        describe('top edge, direction N', () => {
-            it('should wrap around the grid when moving forward from [0, 3] to [0, 0]', () => {
-                rover.setPosition([0, 3]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([0, 0]);
-            });
-
-            it('should wrap around the grid when moving forward from [1, 3] to [1, 0]', () => {
-                rover.setPosition([1, 3]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([1, 0]);
-            });
-
-            it('should wrap around the grid when moving forward from [2, 3] to [2, 0]', () => {
-                rover.setPosition([2, 3]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([2, 0]);
-            });
-
-            it('should wrap around the grid when moving forward from [3, 3] to [3, 0]', () => {
-                rover.setPosition([3, 3]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([3, 0]);
-            });
-
-            it('should wrap around the grid when moving forward from [4, 3] to [4, 0]', () => {
-                rover.setPosition([4, 3]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([4, 0]);
-            });
+            rover = new Rover([0, 0], 'N', gridSize);
         });
 
-        describe('bottom edge, direction S', () => {
+        const testMovement = (direction: Direction, startPositions: Position[], endPositions: Position[], moveMethod: 'moveForward' | 'moveBackward') => {
             beforeEach(() => {
-                rover = new Rover(initialPosition, initialDirection, [5, 4]);
-                rover.setDirection('S');
+                rover.setDirection(direction);
             });
 
-            it('should wrap around the grid when moving forward from [0, 0] to [0, 3]', () => {
-                rover.setPosition([0, 0]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([0, 3]);
+            test.each(startPositions.map((start, index) => [start, endPositions[index]]))(
+                `should wrap around the grid when ${moveMethod} from %p to %p`,
+                (start, end) => {
+                    rover.setPosition(start);
+                    rover[moveMethod]();
+                    expect(rover.getPosition()).toEqual(end);
+                }
+            );
+        };
+
+        describe('move forward', () => {
+            describe('top edge, direction N', () => {
+                testMovement('N', [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], 'moveForward');
             });
 
-            it('should wrap around the grid when moving forward from [1, 0] to [1, 3]', () => {
-                rover.setPosition([1, 0]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([1, 3]);
+            describe('bottom edge, direction S', () => {
+                testMovement('S', [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], 'moveForward');
             });
 
-            it('should wrap around the grid when moving forward from [2, 0] to [2, 3]', () => {
-                rover.setPosition([2, 0]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([2, 3]);
+            describe('left edge, direction W', () => {
+                testMovement('W', [[0, 0], [0, 1], [0, 2], [0, 3]], [[4, 0], [4, 1], [4, 2], [4, 3]], 'moveForward');
             });
 
-            it('should wrap around the grid when moving forward from [3, 0] to [3, 3]', () => {
-                rover.setPosition([3, 0]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([3, 3]);
-            });
-
-            it('should wrap around the grid when moving forward from [4, 0] to [4, 3]', () => {
-                rover.setPosition([4, 0]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([4, 3]);
+            describe('right edge, direction E', () => {
+                testMovement('E', [[4, 0], [4, 1], [4, 2], [4, 3]], [[0, 0], [0, 1], [0, 2], [0, 3]], 'moveForward');
             });
         });
 
-        describe('left edge, direction W', () => {
-            beforeEach(() => {
-                rover = new Rover(initialPosition, initialDirection, [5, 4]);
-                rover.setDirection('W');
+        describe('move backward', () => {
+            describe('top edge, direction N', () => {
+                testMovement('N', [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], 'moveBackward');
             });
 
-            it('should wrap around the grid when moving forward from [0, 0] to [4, 0]', () => {
-                rover.setPosition([0, 0]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([4, 0]);
+            describe('bottom edge, direction S', () => {
+                testMovement('S', [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], 'moveBackward');
             });
 
-            it('should wrap around the grid when moving forward from [0, 1] to [4, 1]', () => {
-                rover.setPosition([0, 1]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([4, 1]);
+            describe('left edge, direction W', () => {
+                testMovement('W', [[4, 0], [4, 1], [4, 2], [4, 3]], [[0, 0], [0, 1], [0, 2], [0, 3]], 'moveBackward');
             });
 
-            it('should wrap around the grid when moving forward from [0, 2] to [4, 2]', () => {
-                rover.setPosition([0, 2]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([4, 2]);
-            });
-
-            it('should wrap around the grid when moving forward from [0, 3] to [4, 3]', () => {
-                rover.setPosition([0, 3]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([4, 3]);
-            });
-        });
-
-        describe('right edge, direction E', () => {
-            beforeEach(() => {
-                rover = new Rover(initialPosition, initialDirection, [5, 4]);
-                rover.setDirection('E');
-            });
-
-            it('should wrap around the grid when moving forward from [4, 0] to [0, 0]', () => {
-                rover.setPosition([4, 0]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([0, 0]);
-            });
-
-            it('should wrap around the grid when moving forward from [4, 1] to [0, 1]', () => {
-                rover.setPosition([4, 1]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([0, 1]);
-            });
-
-            it('should wrap around the grid when moving forward from [4, 2] to [0, 2]', () => {
-                rover.setPosition([4, 2]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([0, 2]);
-            });
-
-            it('should wrap around the grid when moving forward from [4, 3] to [0, 3]', () => {
-                rover.setPosition([4, 3]);
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([0, 3]);
+            describe('right edge, direction E', () => {
+                testMovement('E', [[0, 0], [0, 1], [0, 2], [0, 3]], [[4, 0], [4, 1], [4, 2], [4, 3]], 'moveBackward');
             });
         });
     });
-
-    describe('pac-man effect move backward', () => {
-        describe('top edge, direction N', () => {
-            beforeEach(() => {
-                rover = new Rover(initialPosition, initialDirection, [5, 4]);
-                rover.setDirection('N');
-            });
-
-            it('should wrap around the grid when moving backward from [0, 0] to [0, 3]', () => {
-                rover.setPosition([0, 0]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([0, 3]);
-            });
-
-            it('should wrap around the grid when moving backward from [1, 0] to [1, 3]', () => {
-                rover.setPosition([1, 0]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([1, 3]);
-            });
-
-            it('should wrap around the grid when moving backward from [2, 0] to [2, 3]', () => {
-                rover.setPosition([2, 0]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([2, 3]);
-            });
-
-            it('should wrap around the grid when moving backward from [3, 0] to [3, 3]', () => {
-                rover.setPosition([3, 0]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([3, 3]);
-            });
-
-            it('should wrap around the grid when moving backward from [4, 0] to [4, 3]', () => {
-                rover.setPosition([4, 0]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([4, 3]);
-            });
-        });
-
-        describe('bottom edge, direction S', () => {
-            beforeEach(() => {
-                rover = new Rover(initialPosition, initialDirection, [5, 4]);
-                rover.setDirection('S');
-            });
-
-            it('should wrap around the grid when moving backward from [0, 3] to [0, 0]', () => {
-                rover.setPosition([0, 3]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([0, 0]);
-            });
-
-            it('should wrap around the grid when moving backward from [1, 3] to [1, 0]', () => {
-                rover.setPosition([1, 3]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([1, 0]);
-            });
-
-            it('should wrap around the grid when moving backward from [2, 3] to [2, 0]', () => {
-                rover.setPosition([2, 3]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([2, 0]);
-            });
-
-            it('should wrap around the grid when moving backward from [3, 3] to [3, 0]', () => {
-                rover.setPosition([3, 3]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([3, 0]);
-            });
-
-            it('should wrap around the grid when moving backward from [4, 3] to [4, 0]', () => {
-                rover.setPosition([4, 3]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([4, 0]);
-            });
-        });
-
-        describe('left edge, direction W', () => {
-            beforeEach(() => {
-                rover = new Rover(initialPosition, initialDirection, [5, 4]);
-                rover.setDirection('W');
-            });
-
-            it('should wrap around the grid when moving backward from [4, 0] to [0, 0]', () => {
-                rover.setPosition([4, 0]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([0, 0]);
-            });
-
-            it('should wrap around the grid when moving backward from [4, 1] to [0, 1]', () => {
-                rover.setPosition([4, 1]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([0, 1]);
-            });
-
-            it('should wrap around the grid when moving backward from [4, 2] to [0, 2]', () => {
-                rover.setPosition([4, 2]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([0, 2]);
-            });
-
-            it('should wrap around the grid when moving backward from [4, 3] to [0, 3]', () => {
-                rover.setPosition([4, 3]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([0, 3]);
-            });
-        });
-
-        describe('right edge, direction E', () => {
-            beforeEach(() => {
-                rover = new Rover(initialPosition, initialDirection, [5, 4]);
-                rover.setDirection('E');
-            });
-
-            it('should wrap around the grid when moving backward from [0, 0] to [4, 0]', () => {
-                rover.setPosition([0, 0]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([4, 0]);
-            });
-
-            it('should wrap around the grid when moving backward from [0, 1] to [4, 1]', () => {
-                rover.setPosition([0, 1]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([4, 1]);
-            });
-
-            it('should wrap around the grid when moving backward from [0, 2] to [4, 2]', () => {
-                rover.setPosition([0, 2]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([4, 2]);
-            });
-
-            it('should wrap around the grid when moving backward from [0, 3] to [4, 3]', () => {
-                rover.setPosition([0, 3]);
-                rover.moveBackward();
-                expect(rover.getPosition()).toEqual([4, 3]);
-            });
-        });
-    });
-
 });
