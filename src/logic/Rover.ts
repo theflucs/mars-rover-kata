@@ -8,6 +8,13 @@ export class Rover {
     private gridSize: [number, number];
     private obstacles: Position[];
 
+    /**
+     * Create a Rover with default params.
+     * @param {Position} position
+     * @param {Direction} direction
+     * @param {[number, number]} gridSize
+     * @param {Position[]} [obstacles=[]]
+     */
     constructor(position: Position, direction: Direction, gridSize: [number, number] = [5, 4], obstacles: Position[] = []) {
         this.position = position;
         this.direction = direction;
