@@ -22,4 +22,10 @@ describe('parseGridSize', () => {
         expect(() => parseGridSize('Grid 5 4')).toThrow('Invalid format: The format should be "Size X Y"');
         expect(() => parseGridSize('Size 5 4 7')).toThrow('Invalid format: The format should be "Size X Y"');
     });
+
+    it('should handle extra spaces in the input', () => {
+        expect(parseGridSize('Size   5   4')).toEqual([5, 4]);
+        expect(parseGridSize('Size 5  4')).toEqual([5, 4]);
+        expect(parseGridSize('  Size 5 4 ')).toEqual([5, 4]);
+    });
 })

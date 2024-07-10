@@ -1,7 +1,7 @@
 import { GridSize } from "../../types";
 
 export function parseGridSize(line: string): GridSize {
-    const parts = line.split(' ');
+    const parts = line.trim().split(/\s+/);
 
     if (parts.length !== 3 || parts[0] !== 'Size') {
         throw new Error('Invalid format: The format should be "Size X Y"');
