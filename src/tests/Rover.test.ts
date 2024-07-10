@@ -1,4 +1,5 @@
-import { Direction, Position, Rover } from "../Rover";
+import { Rover } from "../logic/Rover";
+import { Direction, Position } from "../types";
 
 describe('Rover class', () => {
     const initialPosition: Position = [0, 0];
