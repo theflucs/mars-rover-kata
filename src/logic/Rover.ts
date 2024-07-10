@@ -1,5 +1,6 @@
 import { Direction, Position } from "../types";
 import { MOVEMENTS, DIRECTIONS } from "../constants";
+import { getNextPosition, isObstacle } from "../utils";
 
 export class Rover {
     private position: Position;
@@ -30,12 +31,6 @@ export class Rover {
         this.direction = direction;
     }
 
-    private isObstacle(position: Position): boolean {
-        return this.obstacles.some(
-            ([x, y]) => x === position[0] && y === position[1]
-        );
-    }
-
     private turn(clockwise: boolean): void {
         const currentIndex = DIRECTIONS.indexOf(this.direction);
         const length = DIRECTIONS.length;
@@ -53,23 +48,10 @@ export class Rover {
         this.turn(true);
     }
 
-    private getNextPosition(forward: boolean): Position {
-        const [dx, dy] = MOVEMENTS.get(this.direction) || [0, 0];
-        const [x, y] = this.position;
-
-        const nextX = x + (forward ? dx : -dx);
-        const nextY = y + (forward ? dy : -dy);
-
-        const wrappedX = (nextX + this.gridSize[0]) % this.gridSize[0];
-        const wrappedY = (nextY + this.gridSize[1]) % this.gridSize[1];
-
-        return [wrappedX, wrappedY];
-    }
-
     private move(forward: boolean): void {
-        const nextPosition = this.getNextPosition(forward);
+        const nextPosition = getNextPosition(this.position, this.direction, forward, this.gridSize);
 
-        if (!this.isObstacle(nextPosition)) {
+        if (!isObstacle(nextPosition, this.obstacles)) {
             this.position = nextPosition;
         }
     }

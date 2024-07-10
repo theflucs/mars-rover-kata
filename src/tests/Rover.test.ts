@@ -1,5 +1,6 @@
 import { Rover } from "../logic/Rover";
 import { Direction, Position } from "../types";
+import { getNextPosition, isObstacle } from "../utils";
 
 describe('Rover class', () => {
     const initialPosition: Position = [0, 0];
@@ -49,25 +50,25 @@ describe('Rover class', () => {
 
     describe('rover getNextPosition', () => {
         let rover: Rover;
+        const initialPosition: Position = [0, 0];
         const gridSize: [number, number] = [5, 4];
         const obstacles: Position[] = [];
 
         beforeEach(() => {
-            rover = new Rover([0, 0], 'N', gridSize, obstacles);
+            rover = new Rover(initialPosition, 'N', gridSize, obstacles);
         });
-
         it('should calculate the next position moving forward', () => {
-            expect(rover['getNextPosition'](true)).toEqual([0, 1]);
+            expect(getNextPosition(initialPosition, 'N', true, gridSize)).toEqual([0, 1]);
         });
 
         it('should calculate the next position moving backward', () => {
-            expect(rover['getNextPosition'](false)).toEqual([0, 3]);
+            expect(getNextPosition(initialPosition, 'N', false, gridSize)).toEqual([0, 3]);
         });
 
         it('should wrap around the grid boundaries: pacman effect', () => {
             rover.setPosition([4, 3]);
             rover.setDirection('E');
-            expect(rover['getNextPosition'](true)).toEqual([0, 3]);
+            expect(getNextPosition([4, 3], 'E', true, gridSize)).toEqual([0, 3]);
         });
     });
 
@@ -155,12 +156,12 @@ describe('Rover class', () => {
         });
 
         it('should return true if there is an obstacle at the given position', () => {
-            expect(rover['isObstacle']([2, 0])).toBe(true);
-            expect(rover['isObstacle']([0, 3])).toBe(true);
-            expect(rover['isObstacle']([3, 2])).toBe(true);
+            expect(isObstacle([2, 0], obstacles)).toBe(true);
+            expect(isObstacle([0, 3], obstacles)).toBe(true);
+            expect(isObstacle([3, 2], obstacles)).toBe(true);
         });
         it('should return false if there is no obstacle at the given position', () => {
-            expect(rover['isObstacle']([0, 2])).toBe(false);
+            expect(isObstacle([0, 2], obstacles)).toBe(false);
         });
     });
 
