@@ -1,11 +1,11 @@
 import { Rover } from "../logic/Rover";
-import { Direction, Position } from "../types";
 import { getNextPosition, isObstacle } from "../utils";
+import { Direction, GridSize, Position } from "../types";
 
 describe('Rover class', () => {
     const initialPosition: Position = [0, 0];
     const initialDirection: Direction = 'N';
-    const defaultGridSize: [number, number] = [5, 4];
+    const defaultGridSize: GridSize = [5, 4];
     let rover: Rover;
 
     beforeEach(() => {
@@ -110,7 +110,7 @@ describe('Rover class', () => {
 
     describe('utility functions', () => {
         describe('getNextPosition', () => {
-            const gridSize: [number, number] = [5, 4];
+            const gridSize: GridSize = [5, 4];
 
             test.each([
                 [[0, 0], 'N', true, [0, 1]],

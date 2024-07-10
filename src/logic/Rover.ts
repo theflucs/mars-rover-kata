@@ -1,21 +1,21 @@
-import { Direction, Position } from "../types";
+import { Direction, GridSize, Position } from "../types";
 import { MOVEMENTS, DIRECTIONS } from "../constants";
 import { getNextPosition, isObstacle } from "../utils";
 
 export class Rover {
     private position: Position;
     private direction: Direction;
-    private gridSize: [number, number];
+    private gridSize: GridSize;
     private obstacles: Position[];
 
     /**
      * Create a Rover with default params.
      * @param {Position} position
      * @param {Direction} direction
-     * @param {[number, number]} gridSize
+     * @param {GridSize} gridSize
      * @param {Position[]} [obstacles=[]]
      */
-    constructor(position: Position, direction: Direction, gridSize: [number, number] = [5, 4], obstacles: Position[] = []) {
+    constructor(position: Position, direction: Direction, gridSize: GridSize = [5, 4], obstacles: Position[] = []) {
         this.position = position;
         this.direction = direction;
         this.gridSize = gridSize;

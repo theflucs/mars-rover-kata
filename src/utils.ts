@@ -1,5 +1,5 @@
 import { MOVEMENTS } from "./constants";
-import { Direction, Position } from "./types";
+import { Direction, GridSize, Position } from "./types";
 
 export function isObstacle(position: Position, obstacles: Position[]): boolean {
     return obstacles.some(([x, y]) => x === position[0] && y === position[1]);
@@ -9,7 +9,7 @@ export function getNextPosition(
     currentPosition: Position,
     direction: Direction,
     forward: boolean,
-    gridSize: [number, number]
+    gridSize: GridSize
 ): Position {
     const [dx, dy] = MOVEMENTS.get(direction) || [0, 0];
     const [x, y] = currentPosition;

@@ -1,7 +1,7 @@
-import { Direction } from "./types";
+import { Direction, GridSize } from "./types";
 
 export const DIRECTIONS: ReadonlyArray<Direction> = ['N', 'E', 'S', 'W'];
-export const MOVEMENTS: ReadonlyMap<Direction, [number, number]> = new Map([
+export const MOVEMENTS: ReadonlyMap<Direction, GridSize> = new Map([
     ['N', [0, 1]],
     ['E', [1, 0]],
     ['S', [0, -1]],
