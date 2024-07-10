@@ -1,5 +1,5 @@
 import { Direction, GridSize, Position } from "../types";
-import { MOVEMENTS, DIRECTIONS } from "../constants";
+import { VALID_MOVEMENTS, DIRECTIONS } from "../constants";
 import { getNextPosition, isObstacle } from "../utils";
 
 export class Rover {

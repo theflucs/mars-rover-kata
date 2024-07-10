@@ -1,4 +1,4 @@
-import { MOVEMENTS } from "./constants";
+import { VALID_MOVEMENTS } from "./constants";
 import { Direction, GridSize, Position } from "./types";
 
 export function isObstacle(position: Position, obstacles: Position[]): boolean {
@@ -11,7 +11,7 @@ export function getNextPosition(
     forward: boolean,
     gridSize: GridSize
 ): Position {
-    const [dx, dy] = MOVEMENTS.get(direction) || [0, 0];
+    const [dx, dy] = VALID_MOVEMENTS.get(direction) || [0, 0];
     const [x, y] = currentPosition;
 
     const nextX = x + (forward ? dx : -dx);
