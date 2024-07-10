@@ -5,6 +5,7 @@ import { getNextPosition, isObstacle } from "../utils";
 describe('Rover class', () => {
     const initialPosition: Position = [0, 0];
     const initialDirection: Direction = 'N';
+    const defaultGridSize: [number, number] = [5, 4];
     let rover: Rover;
 
     beforeEach(() => {
@@ -48,148 +49,89 @@ describe('Rover class', () => {
         });
     });
 
-    describe('rover getNextPosition', () => {
-        let rover: Rover;
-        const initialPosition: Position = [0, 0];
-        const gridSize: [number, number] = [5, 4];
-        const obstacles: Position[] = [];
-
-        beforeEach(() => {
-            rover = new Rover(initialPosition, 'N', gridSize, obstacles);
+    describe('movement', () => {
+        describe('without obstacles', () => {
+            test.each<[string, 'moveForward' | 'moveBackward', Direction, Position]>([
+                ['forward', 'moveForward', 'N', [0, 1]],
+                ['forward', 'moveForward', 'E', [1, 0]],
+                ['backward', 'moveBackward', 'S', [0, 1]],
+                ['backward', 'moveBackward', 'W', [1, 0]],
+            ])('should move %s correctly when facing %s', (_, moveMethod, direction, expectedPosition) => {
+                rover = new Rover(initialPosition, direction);
+                rover[moveMethod]();
+                expect(rover.getPosition()).toEqual(expectedPosition);
+            });
         });
-        it('should calculate the next position moving forward', () => {
-            expect(getNextPosition(initialPosition, 'N', true, gridSize)).toEqual([0, 1]);
-        });
+        describe('with obstacles', () => {
+            const obstacles: Position[] = [[2, 1], [4, 3]];
 
-        it('should calculate the next position moving backward', () => {
-            expect(getNextPosition(initialPosition, 'N', false, gridSize)).toEqual([0, 3]);
-        });
+            beforeEach(() => {
+                rover = new Rover([2, 0], 'N', defaultGridSize, obstacles);
+            });
 
-        it('should wrap around the grid boundaries: pacman effect', () => {
-            rover.setPosition([4, 3]);
-            rover.setDirection('E');
-            expect(getNextPosition([4, 3], 'E', true, gridSize)).toEqual([0, 3]);
+            it('should not move when facing an obstacle', () => {
+                rover.moveForward();
+                expect(rover.getPosition()).toEqual([2, 0]);
+            });
+
+            it('should move when not facing an obstacle', () => {
+                rover.setDirection('E');
+                rover.moveForward();
+                expect(rover.getPosition()).toEqual([3, 0]);
+            });
         });
     });
 
-    describe('moving', () => {
-        test.each<[string, 'moveForward' | 'moveBackward', Direction, Position]>([
-            ['forward', 'moveForward', 'N', [0, 1]],
-            ['forward', 'moveForward', 'E', [1, 0]],
-            ['backward', 'moveBackward', 'S', [0, 1]],
-            ['backward', 'moveBackward', 'W', [1, 0]],
-        ])('should move %s correctly when facing %s', (_, moveMethod, direction, expectedPosition) => {
-            rover = new Rover(initialPosition, direction);
-            rover[moveMethod]();
-            expect(rover.getPosition()).toEqual(expectedPosition);
-        });
-    });
 
     describe('pacman effect: wrap around grid boundaries', () => {
-        let rover: Rover;
-        const gridSize: [number, number] = [5, 4];
+        type PacmanTestCase = {
+            direction: Direction;
+            start: Position;
+            end: Position;
+            method: 'moveForward' | 'moveBackward';
+        }
 
-        beforeEach(() => {
-            rover = new Rover([0, 0], 'N', gridSize);
-        });
-
-        const testMovement = (direction: Direction, startPositions: Position[], endPositions: Position[], moveMethod: 'moveForward' | 'moveBackward') => {
-            beforeEach(() => {
-                rover.setDirection(direction);
-            });
-
-            test.each(startPositions.map((start, index) => [start, endPositions[index]]))(
-                `should wrap around the grid when ${moveMethod} from %p to %p`,
-                (start, end) => {
-                    rover.setPosition(start);
-                    rover[moveMethod]();
-                    expect(rover.getPosition()).toEqual(end);
-                }
-            );
-        };
-
-        describe('move forward without obstacles', () => {
-            describe('top edge, direction N', () => {
-                testMovement('N', [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], 'moveForward');
-            });
-
-            describe('bottom edge, direction S', () => {
-                testMovement('S', [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], 'moveForward');
-            });
-
-            describe('left edge, direction W', () => {
-                testMovement('W', [[0, 0], [0, 1], [0, 2], [0, 3]], [[4, 0], [4, 1], [4, 2], [4, 3]], 'moveForward');
-            });
-
-            describe('right edge, direction E', () => {
-                testMovement('E', [[4, 0], [4, 1], [4, 2], [4, 3]], [[0, 0], [0, 1], [0, 2], [0, 3]], 'moveForward');
-            });
-        });
-
-        describe('move backward without obstacles', () => {
-            describe('top edge, direction N', () => {
-                testMovement('N', [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], 'moveBackward');
-            });
-
-            describe('bottom edge, direction S', () => {
-                testMovement('S', [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3]], [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], 'moveBackward');
-            });
-
-            describe('left edge, direction W', () => {
-                testMovement('W', [[4, 0], [4, 1], [4, 2], [4, 3]], [[0, 0], [0, 1], [0, 2], [0, 3]], 'moveBackward');
-            });
-
-            describe('right edge, direction E', () => {
-                testMovement('E', [[0, 0], [0, 1], [0, 2], [0, 3]], [[4, 0], [4, 1], [4, 2], [4, 3]], 'moveBackward');
-            });
+        const testCases: PacmanTestCase[] = [
+            { direction: 'N', start: [0, 3], end: [0, 0], method: 'moveForward' },
+            { direction: 'S', start: [0, 0], end: [0, 3], method: 'moveForward' },
+            { direction: 'W', start: [0, 0], end: [4, 0], method: 'moveForward' },
+            { direction: 'E', start: [4, 0], end: [0, 0], method: 'moveForward' },
+            { direction: 'N', start: [0, 0], end: [0, 3], method: 'moveBackward' },
+            { direction: 'S', start: [0, 3], end: [0, 0], method: 'moveBackward' },
+            { direction: 'W', start: [4, 0], end: [0, 0], method: 'moveBackward' },
+            { direction: 'E', start: [0, 0], end: [4, 0], method: 'moveBackward' },
+        ];
+        test.each(testCases)('should wrap around when moving $method facing $direction', ({ direction, start, end, method }) => {
+            rover = new Rover(start, direction as Direction, defaultGridSize);
+            rover[method as 'moveForward' | 'moveBackward']();
+            expect(rover.getPosition()).toEqual(end);
         });
     });
 
-    describe('isObstacle method', () => {
-        let rover: Rover;
-        const initialPosition: Position = [0, 0];
-        const gridSize: [number, number] = [5, 4];
-        const obstacles: Position[] = [[2, 0], [0, 3], [3, 2]];
+    describe('utility functions', () => {
+        describe('getNextPosition', () => {
+            const gridSize: [number, number] = [5, 4];
 
-        beforeEach(() => {
-            rover = new Rover(initialPosition, 'N', gridSize, obstacles);
+            test.each([
+                [[0, 0], 'N', true, [0, 1]],
+                [[0, 0], 'N', false, [0, 3]],
+                [[4, 3], 'E', true, [0, 3]],
+            ])('should calculate the next position correctly', (start, direction, forward, expected) => {
+                expect(getNextPosition(start as Position, direction as Direction, forward, gridSize)).toEqual(expected);
+            });
         });
 
-        it('should return true if there is an obstacle at the given position', () => {
-            expect(isObstacle([2, 0], obstacles)).toBe(true);
-            expect(isObstacle([0, 3], obstacles)).toBe(true);
-            expect(isObstacle([3, 2], obstacles)).toBe(true);
-        });
-        it('should return false if there is no obstacle at the given position', () => {
-            expect(isObstacle([0, 2], obstacles)).toBe(false);
-        });
-    });
+        describe('isObstacle', () => {
+            const obstacles: Position[] = [[2, 0], [0, 3], [3, 2]];
 
-    describe('rover movement with obstacles', () => {
-        let rover: Rover;
-        const gridSize: [number, number] = [5, 4];
-        const obstacles: Position[] = [[2, 1], [4, 3]];
-
-        beforeEach(() => {
-            rover = new Rover([2, 0], 'N', gridSize, obstacles);
-        });
-
-        it('should not move when facing an obstacle', () => {
-            rover.moveForward();
-            expect(rover.getPosition()).toEqual([2, 0]);
-        });
-
-        it('should move when not facing an obstacle', () => {
-            rover.setDirection('E');
-            rover.moveForward();
-            expect(rover.getPosition()).toEqual([3, 0]);
-        });
-
-        it('should wrap around the grid', () => {
-            rover.setPosition([4, 0]);
-            rover.setDirection('E');
-            rover.moveForward();
-            expect(rover.getPosition()).toEqual([0, 0]);
+            test.each([
+                [[2, 0], true],
+                [[0, 3], true],
+                [[3, 2], true],
+                [[0, 2], false],
+            ])('should correctly identify obstacles', (position, expected) => {
+                expect(isObstacle(position as Position, obstacles)).toBe(expected);
+            });
         });
     });
 });
