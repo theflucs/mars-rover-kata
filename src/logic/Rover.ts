@@ -1,19 +1,11 @@
-export type Direction = 'N' | 'E' | 'S' | 'W';
-export type Position = [number, number];
+import { Direction, Position } from "../types";
+import { MOVEMENTS, DIRECTIONS } from "../constants";
 
 export class Rover {
     private position: Position;
     private direction: Direction;
     private gridSize: [number, number];
     private obstacles: Position[];
-
-    private static readonly DIRECTIONS: ReadonlyArray<Direction> = ['N', 'E', 'S', 'W'];
-    private static readonly MOVEMENTS: ReadonlyMap<Direction, Position> = new Map([
-        ['N', [0, 1]],
-        ['E', [1, 0]],
-        ['S', [0, -1]],
-        ['W', [-1, 0]]
-    ]);
 
     constructor(position: Position, direction: Direction, gridSize: [number, number] = [5, 4], obstacles: Position[] = []) {
         this.position = position;
@@ -45,12 +37,12 @@ export class Rover {
     }
 
     private turn(clockwise: boolean): void {
-        const currentIndex = Rover.DIRECTIONS.indexOf(this.direction);
-        const length = Rover.DIRECTIONS.length;
+        const currentIndex = DIRECTIONS.indexOf(this.direction);
+        const length = DIRECTIONS.length;
 
         const newIndex = (currentIndex + (clockwise ? 1 : -1) + length) % length;
 
-        this.direction = Rover.DIRECTIONS[newIndex];
+        this.direction = DIRECTIONS[newIndex];
     }
 
     turnLeft(): void {
@@ -62,7 +54,7 @@ export class Rover {
     }
 
     private getNextPosition(forward: boolean): Position {
-        const [dx, dy] = Rover.MOVEMENTS.get(this.direction) || [0, 0];
+        const [dx, dy] = MOVEMENTS.get(this.direction) || [0, 0];
         const [x, y] = this.position;
 
         const nextX = x + (forward ? dx : -dx);
