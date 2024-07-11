@@ -1,4 +1,5 @@
-import { parseGridSize, parseObstacle } from "../../logic/fileReader/utils";
+import { parseCommands, parseGridSize, parseObstacle } from "../../logic/fileReader/utils";
+import { Command } from "../../types";
 
 describe('parseGridSize', () => {
     it('should parse the grid size correctly and handle extra spaces', () => {
@@ -42,3 +43,12 @@ describe('parseObstacle', () => {
         expect(() => parseObstacle('Obstacle 2 -1')).toThrow('Obstacle coordinates must be non-negative integers');
     });
 });
+
+describe('parseCommands', () => {
+    it('should parse a command string into an array of commands', () => {
+        const commandsString = 'LRFB';
+        const expectedCommands: Command[] = ['L', 'R', 'F', 'B'];
+        expect(parseCommands(commandsString)).toEqual(expectedCommands);
+    });
+});
+

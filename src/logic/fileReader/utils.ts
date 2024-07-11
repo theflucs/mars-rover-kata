@@ -1,4 +1,4 @@
-import { GridSize, Position } from "../../types";
+import { Command, GridSize, Position } from "../../types";
 
 /**
  * `parseGridSize` and `parseObstacle` are used to parse and validate the grid siz or the obstacle coordinates from a string.
@@ -68,4 +68,16 @@ export function extractParts(line: string): Position {
     const x = parseInt(parts[1], 10);
     const y = parseInt(parts[2], 10);
     return [x, y];
+}
+
+/**
+ * Parses a command string and returns an array of commands.
+ * @param {string} commandsString - The string of commands to parse.
+ * @returns {Command[]} - An array of commands to execute.
+ */
+export function parseCommands(commandsString: string): Command[] {
+    return commandsString
+        .split('')
+        .filter(command => ['L', 'R', 'F', 'B'].includes(command))
+        .map(command => command as Command);
 }
