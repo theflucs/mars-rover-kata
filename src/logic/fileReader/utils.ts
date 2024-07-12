@@ -1,3 +1,4 @@
+import { VALID_COMMANDS } from "../../constants";
 import { Command, GridSize, Position } from "../../types";
 
 /**
@@ -77,7 +78,12 @@ export function extractParts(line: string): Position {
  */
 export function parseCommands(commandsString: string): Command[] {
     return commandsString
+        .toUpperCase()
         .split('')
-        .filter(command => ['L', 'R', 'F', 'B'].includes(command))
+        .filter(command => isValidCommand(command as Command))
         .map(command => command as Command);
+}
+
+function isValidCommand(command: Command): command is Command {
+    return VALID_COMMANDS.includes(command);
 }

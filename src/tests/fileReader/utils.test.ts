@@ -45,10 +45,45 @@ describe('parseObstacle', () => {
 });
 
 describe('parseCommands', () => {
-    it('should parse a command string into an array of commands', () => {
-        const commandsString = 'LRFB';
+    it('should parse a valid command string into an array of commands', () => {
+        const commandsString = 'RFFL';
+        const expectedCommands: Command[] = ['R', 'F', 'F', 'L'];
+        expect(parseCommands(commandsString)).toEqual(expectedCommands);
+    });
+
+    it('should ignore invalid characters and keep only valid commands', () => {
+        const commandsString = 'RFFLXYZ!@#1';
+        const expectedCommands: Command[] = ['R', 'F', 'F', 'L'];
+        expect(parseCommands(commandsString)).toEqual(expectedCommands);
+    });
+
+    it('should return an empty array for a string with only invalid characters', () => {
+        const commandsString = 'XYZ!@#1';
+        const expectedCommands: Command[] = [];
+        expect(parseCommands(commandsString)).toEqual(expectedCommands);
+    });
+
+    it('should return an empty array for an empty command string', () => {
+        const commandsString = '';
+        const expectedCommands: Command[] = [];
+        expect(parseCommands(commandsString)).toEqual(expectedCommands);
+    });
+
+    it('should handle a string with whitespace characters by removing them', () => {
+        const commandsString = 'L R F B';
         const expectedCommands: Command[] = ['L', 'R', 'F', 'B'];
         expect(parseCommands(commandsString)).toEqual(expectedCommands);
     });
-});
 
+    it('should convert all commands to uppercase', () => {
+        const commandsString = 'lRfB';
+        const expectedCommands: Command[] = ['L', 'R', 'F', 'B'];
+        expect(parseCommands(commandsString)).toEqual(expectedCommands);
+    });
+
+    it('should handle a string with multiple valid commands', () => {
+        const commandsString = 'FFRRFFLL';
+        const expectedCommands: Command[] = ['F', 'F', 'R', 'R', 'F', 'F', 'L', 'L'];
+        expect(parseCommands(commandsString)).toEqual(expectedCommands);
+    });
+});
