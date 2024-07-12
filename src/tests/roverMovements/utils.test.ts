@@ -1,5 +1,5 @@
-import { Direction, GridSize, Position } from "../types";
-import { getNextPosition, isObstacle } from "../utils";
+import { Direction, GridSize, Position } from "../../types";
+import { getNextPosition, isObstacle } from "../../logic/roverMovements/utils";
 
 describe('utility functions', () => {
     describe('getNextPosition', () => {

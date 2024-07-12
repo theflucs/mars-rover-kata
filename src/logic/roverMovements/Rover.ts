@@ -1,6 +1,6 @@
-import { Direction, GridSize, Position } from "../types";
-import { VALID_DIRECTIONS } from "../constants";
-import { getNextPosition, isObstacle } from "../utils";
+import { Direction, GridSize, Position } from "../../types";
+import { VALID_DIRECTIONS } from "../../constants";
+import { getNextPosition, isObstacle } from "./utils";
 
 export class Rover {
     private position: Position;
