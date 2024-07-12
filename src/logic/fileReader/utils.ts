@@ -34,6 +34,8 @@ export function validateFormat(line: string, prefix: string): void {
     }
 }
 
+// parsers helper functions
+
 /**
  * Validates the coordinates in a line based on the prefix.
  * For "Size", the coordinates must be positive integers greater than zero.
@@ -86,4 +88,33 @@ export function parseCommands(commandsString: string): Command[] {
 
 function isValidCommand(command: Command): command is Command {
     return VALID_COMMANDS.includes(command);
+}
+
+export function readGridSize(lines: string[]): GridSize {
+    const gridSizeLine = lines.find(line => line.startsWith('Size'));
+    if (!gridSizeLine) {
+        throw new Error('Grid size definition is missing');
+    }
+    return parseGridSize(gridSizeLine);
+}
+
+export function readObstacles(lines: string[]): Position[] {
+    const obstacleLines = lines.filter(line => line.startsWith('Obstacle'));
+    if (obstacleLines.length === 0) {
+        return [];
+    }
+    return obstacleLines.map(line => {
+        if (!line.startsWith('Obstacle')) {
+            throw new Error(`Invalid line format for obstacles: ${line}`);
+        }
+        return parseObstacle(line);
+    });
+}
+
+export function readCommands(lines: string[]): Command[] {
+    const commandsLine = lines.find(line => !line.startsWith('Size') && !line.startsWith('Obstacle'));
+    if (!commandsLine) {
+        throw new Error('Commands line is missing');
+    }
+    return parseCommands(commandsLine);
 }
