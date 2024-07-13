@@ -1,5 +1,5 @@
-import { VALID_MOVEMENTS } from "./constants";
-import { Direction, GridSize, Position } from "./types";
+import { VALID_MOVEMENTS } from "../../constants";
+import { Direction, GridSize, Position } from "../../types";
 
 export function isObstacle(position: Position, obstacles: Position[]): boolean {
     return obstacles.some(([x, y]) => x === position[0] && y === position[1]);
