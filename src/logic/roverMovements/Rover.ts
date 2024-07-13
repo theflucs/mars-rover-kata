@@ -57,6 +57,15 @@ export class Rover {
         this.turn(true);
     }
 
+    /**
+     * Move the rover one step forward in the current direction.
+     * The rover will check for obstacles before moving. If an obstacle is encountered,
+     * the rover will stop moving and set an error state.
+     *
+     * @throws {Error} Throws an error if an invalid direction is provided.
+     * @throws {Error} Throws an error if an obstacle is detected while moving.
+     * 
+     */
     private move(forward: boolean): void {
         const nextPosition = getNextPosition(this.position, this.direction, forward, this.gridSize);
 
@@ -74,6 +83,17 @@ export class Rover {
         this.move(false);
     }
 
+    /**
+     * Execute a sequence of commands to control the rover's movement and rotation.
+     * Commands can be 'F' (forward), 'B' (backward), 'L' (left turn), or 'R' (right turn).
+     * The rover will handle each command in sequence, stopping if an obstacle is detected.
+     * 
+     * If an invalid command is encountered, an error will be thrown.
+     * 
+     * @param {Command[]} commands - An array of commands to execute. Valid commands are 'F', 'B', 'L', 'R'.
+     * @throws {Error} Throws an error if an invalid command is encountered.
+     * 
+     */
     public executeCommands(commands: Command[]): string {
         const commandActions: Record<Command, () => void> = {
             'L': () => this.turnLeft(),
