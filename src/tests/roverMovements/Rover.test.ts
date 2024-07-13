@@ -238,7 +238,20 @@ describe('Rover class', () => {
                     expect(rover.getDirection()).toBe('N');
                 });
             });
+        });
 
+        describe('writeOutput', () => {
+            const defaultGridSize: GridSize = [5, 4];
+            it('should return the correct output string without obstacles', () => {
+                const rover = new Rover([2, 3], 'E', defaultGridSize);
+                expect(rover.writeOutput()).toBe('2:3:E');
+            });
+
+            it('should return correct output string with obstacles', () => {
+                const rover = new Rover([1, 0], 'E', defaultGridSize, [[2, 0]]);
+                rover.executeCommands(['F', 'F', 'F']);
+                expect(rover.writeOutput()).toBe('O:1:0:E');
+            });
         });
     });
 });

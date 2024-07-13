@@ -74,7 +74,7 @@ export class Rover {
         this.move(false);
     }
 
-    public executeCommands(commands: Command[]): void {
+    public executeCommands(commands: Command[]): string {
         const commandActions: Record<Command, () => void> = {
             'L': () => this.turnLeft(),
             'R': () => this.turnRight(),
@@ -98,5 +98,12 @@ export class Rover {
                 throw error;
             }
         }
+        return this.writeOutput();
     }
+
+    public writeOutput(): string {
+        const positionOutput = `${this.position[0]}:${this.position[1]}:${this.direction}`;
+        return this.isObstacleError ? `O:${positionOutput}` : positionOutput;
+    }
+
 }
