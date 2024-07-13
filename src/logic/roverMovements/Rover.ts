@@ -72,22 +72,18 @@ export class Rover {
     }
 
     public executeCommands(commands: Command[]): void {
+        const commandActions: Record<Command, () => void> = {
+            'L': () => this.turnLeft(),
+            'R': () => this.turnRight(),
+            'F': () => this.moveForward(),
+            'B': () => this.moveBackward(),
+        };
+
         commands.forEach(command => {
-            switch (command) {
-                case 'L':
-                    this.turnLeft();
-                    break;
-                case 'R':
-                    this.turnRight();
-                    break;
-                case 'F':
-                    this.moveForward();
-                    break;
-                case 'B':
-                    this.moveBackward();
-                    break;
-                default:
-                    throw new Error(`Invalid command: ${command}`);
+            if (command in commandActions) {
+                commandActions[command]();
+            } else {
+                throw new Error(`Invalid command: ${command}`);
             }
         });
     }
