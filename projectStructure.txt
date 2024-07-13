@@ -1,0 +1,26 @@
+project-root/
+├── src/
+│   ├── logic/
+│   │   ├── fileReader/                 // logic for reading the input file
+│   │   │   ├── inputFileReader.ts      // function to read the input file
+│   │   │   └── utils.ts                // utilities for file reading
+│   │   │
+│   │   ├── roverMovements/             // logic for rover movements
+│   │   │   ├── Rover.ts                // Rover class with movement logic
+│   │   │   └── utils.ts                // utilities for movements
+│   │   │
+│   ├── tests/
+│   │   ├── fileReader/                 // tests for input file reading
+│   │   │   ├── inputFileReader.test.ts
+│   │   │   └── utils.test.ts
+│   │   │
+│   │   └── roverMovements/             // tests for rover movements
+│   │       ├── Rover.test.ts
+│   │       └── utils.test.ts
+│   │
+│   ├── constants.ts                    // globally shared constants
+│   └── types.ts                        // globally shared types
+├── jest.config.js
+├── package.json
+└── tsconfig.json
+
