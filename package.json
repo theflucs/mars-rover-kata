@@ -6,6 +6,7 @@
     "start": "pnpm run build && node dist/index.js",
     "build": "tsc",
     "test": "jest",
+    "test:clear": "jest --clearCache",
     "type-check": "tsc --noEmit"
   },
   "author": "sa.cux.dev",
