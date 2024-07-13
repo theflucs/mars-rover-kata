@@ -7,6 +7,7 @@ export class Rover {
     private direction: Direction;
     private gridSize: GridSize;
     private obstacles: Position[];
+    private isObstacleError: boolean;
 
     /**
      * Create a Rover with default params.
@@ -20,6 +21,7 @@ export class Rover {
         this.direction = direction;
         this.gridSize = gridSize;
         this.obstacles = obstacles;
+        this.isObstacleError = false;
     }
 
     public getPosition(): Position {
@@ -58,9 +60,10 @@ export class Rover {
     private move(forward: boolean): void {
         const nextPosition = getNextPosition(this.position, this.direction, forward, this.gridSize);
 
-        if (!isObstacle(nextPosition, this.obstacles)) {
-            this.position = nextPosition;
+        if (isObstacle(nextPosition, this.obstacles)) {
+            throw new Error(`Obstacle detected at ${nextPosition[0]},${nextPosition[1]}`);
         }
+        this.position = nextPosition;
     }
 
     moveForward(): void {
@@ -79,12 +82,21 @@ export class Rover {
             'B': () => this.moveBackward(),
         };
 
-        commands.forEach(command => {
-            if (command in commandActions) {
-                commandActions[command]();
-            } else {
-                throw new Error(`Invalid command: ${command}`);
+        try {
+            for (const command of commands) {
+                if (command in commandActions) {
+                    if (this.isObstacleError) break;
+                    commandActions[command]();
+                } else {
+                    throw new Error(`Invalid command: ${command}`);
+                }
             }
-        });
+        } catch (error) {
+            if (error instanceof Error && error.message.startsWith('Obstacle detected')) {
+                this.isObstacleError = true;
+            } else {
+                throw error;
+            }
+        }
     }
 }

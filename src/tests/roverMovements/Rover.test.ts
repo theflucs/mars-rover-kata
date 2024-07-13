@@ -68,9 +68,10 @@ describe('Rover class', () => {
                 rover = new Rover([2, 0], 'N', defaultGridSize, obstacles);
             });
 
-            it('should not move when facing an obstacle', () => {
-                rover.moveForward();
-                expect(rover.getPosition()).toEqual([2, 0]);
+            it('should throw an error when facing an obstacle', () => {
+                expect(() => {
+                    rover.moveForward();
+                }).toThrow('Obstacle detected at 2,1');
             });
 
             it('should move when not facing an obstacle', () => {
@@ -162,6 +163,82 @@ describe('Rover class', () => {
                 expect(rover.getPosition()).toEqual([1, 2]);
                 expect(rover.getDirection()).toEqual('S');
             });
+        });
+
+        describe('executeCommands', () => {
+            const gridSize: GridSize = [5, 4];
+            describe('without obstacles', () => {
+                const gridSize: GridSize = [5, 4];
+                describe('handle a sequence of commands in different directions', () => {
+                    test.each<[string, 'moveForward' | 'moveBackward', Direction, Position]>([
+                        ['moving forward from (0,0) facing N', 'moveForward', 'N', [0, 1]],
+                        ['moving forward from (0,0) facing E', 'moveForward', 'E', [1, 0]],
+                        ['moving backward from (0,0) facing S', 'moveBackward', 'S', [0, 1]],
+                        ['moving backward from (0,0) facing W', 'moveBackward', 'W', [1, 0]],
+                    ])('should move %s correctly when facing %s', (_, moveMethod, direction, expectedPosition) => {
+                        const rover = new Rover([0, 0], direction, gridSize);
+                        rover[moveMethod]();
+                        expect(rover.getPosition()).toEqual(expectedPosition);
+                    });
+                });
+
+                it('should handle a sequence of commands without obstacles', () => {
+                    const rover = new Rover([0, 0], 'N', gridSize);
+                    rover.executeCommands(['F', 'R', 'F', 'F', 'L', 'B', 'L', 'F']);
+                    expect(rover.getPosition()).toEqual([1, 0]);
+                    expect(rover.getDirection()).toEqual('W');
+                });
+
+                it('should handle wrap around commands in both axes without obstacles', () => {
+                    const rover = new Rover([4, 0], 'E', gridSize);
+                    rover.executeCommands(['F', 'F', 'R', 'F', 'F']);
+                    expect(rover.getPosition()).toEqual([1, 2]);
+                    expect(rover.getDirection()).toEqual('S');
+                });
+            });
+            describe('with obstacles', () => {
+                const gridSize: GridSize = [5, 4];
+
+                describe('handle obstacle in different directions', () => {
+                    const gridSize: GridSize = [5, 4];
+                    const initialPosition: Position = [2, 1];
+                    const obstacles: Position[] = [
+                        [2, 2],
+                        [3, 1],
+                        [2, 0],
+                        [1, 1]
+                    ];
+                    test.each<[string, 'F' | 'B', Direction, Position]>([
+                        ['forward', 'F', 'N', [2, 1]],
+                        ['forward', 'F', 'E', [2, 1]],
+                        ['forward', 'F', 'S', [2, 1]],
+                        ['forward', 'F', 'W', [2, 1]],
+                    ])('should stop moving %s when facing an obstacle in direction %s', (_, command, direction, expectedPosition) => {
+                        const rover = new Rover(initialPosition, direction, gridSize, obstacles);
+                        rover.executeCommands([command]);
+                        expect(rover.getPosition()).toEqual(expectedPosition);
+                        expect(rover.getDirection()).toEqual(direction);
+                    });
+                });
+
+                it('should detect an immediate obstacle and not move', () => {
+                    const initialPosition: Position = [0, 0];
+                    const immediateObstacle: Position[] = [[0, 1]];
+                    const rover = new Rover(initialPosition, 'N', gridSize, immediateObstacle);
+
+                    rover.executeCommands(['F']);
+                    expect(rover.getPosition()).toEqual(initialPosition);
+                    expect(rover.getDirection()).toBe('N');
+                });
+
+                it('should stop the sequence when an obstacle error has been thrown', () => {
+                    const rover = new Rover([2, 0], 'N', gridSize, [[2, 1]]);
+                    rover.executeCommands(['F', 'F', 'F']);
+                    expect(rover.getPosition()).toEqual([2, 0]);
+                    expect(rover.getDirection()).toBe('N');
+                });
+            });
+
         });
     });
 });
