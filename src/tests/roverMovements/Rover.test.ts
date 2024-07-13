@@ -1,5 +1,5 @@
 import { Rover } from "../../logic/roverMovements/Rover";
-import { Direction, GridSize, Position } from "../../types";
+import { Command, Direction, GridSize, Position } from "../../types";
 
 describe('Rover class', () => {
     const initialPosition: Position = [0, 0];
@@ -8,7 +8,7 @@ describe('Rover class', () => {
     let rover: Rover;
 
     beforeEach(() => {
-        rover = new Rover(initialPosition, initialDirection);
+        rover = new Rover(initialPosition, initialDirection, defaultGridSize);
     });
 
     describe('initialization', () => {
@@ -104,6 +104,64 @@ describe('Rover class', () => {
             rover = new Rover(start, direction as Direction, defaultGridSize);
             rover[method as 'moveForward' | 'moveBackward']();
             expect(rover.getPosition()).toEqual(end);
+        });
+    });
+
+    describe('executeCommands', () => {
+        const gridSize: GridSize = [5, 4];
+
+        describe('single command movements', () => {
+            test.each([
+                [[0, 0], 'N', 'F', [0, 1], 'move forward facing north'],
+                [[0, 0], 'N', 'B', [0, 3], 'move backward facing north (wrap)'],
+                [[0, 0], 'E', 'F', [1, 0], 'move forward facing east'],
+                [[4, 0], 'E', 'F', [0, 0], 'move forward facing east (wrap)'],
+                [[0, 0], 'S', 'F', [0, 3], 'move forward facing south (wrap)'],
+                [[0, 0], 'S', 'B', [0, 1], 'move backward facing south'],
+                [[0, 0], 'W', 'F', [4, 0], 'move forward facing west (wrap)'],
+                [[1, 0], 'W', 'F', [0, 0], 'move forward facing west'],
+            ])('should %s', (startPos, startDir, command, expectedPos) => {
+                const rover = new Rover(startPos as Position, startDir as Direction, gridSize);
+                rover.executeCommands([command as Command]);
+                expect(rover.getPosition()).toEqual(expectedPos);
+            });
+        });
+
+        describe('rotation commands', () => {
+            test.each([
+                ['N', ['R'], 'E', 'turn right from north'],
+                ['E', ['R'], 'S', 'turn right from east'],
+                ['S', ['R'], 'W', 'turn right from south'],
+                ['W', ['R'], 'N', 'turn right from west'],
+                ['N', ['L'], 'W', 'turn left from north'],
+                ['W', ['L'], 'S', 'turn left from west'],
+                ['S', ['L'], 'E', 'turn left from south'],
+                ['E', ['L'], 'N', 'turn left from east'],
+            ])('should %s', (startDir, commands, expectedDir) => {
+                const rover = new Rover([0, 0], startDir as Direction, gridSize);
+                rover.executeCommands(commands as Command[]);
+                expect(rover.getDirection()).toEqual(expectedDir);
+            });
+            it('should rotate correctly with multiple turns', () => {
+                const rover = new Rover([0, 0], 'N', gridSize);
+                rover.executeCommands(['R', 'R', 'R', 'R']);
+                expect(rover.getDirection()).toEqual('N');
+            });
+        });
+
+        describe('complex command sequences', () => {
+            test('should handle a sequence of movements and rotations', () => {
+                const rover = new Rover([0, 0], 'N', gridSize);
+                rover.executeCommands(['F', 'R', 'F', 'F', 'L', 'B', 'L', 'F']);
+                expect(rover.getPosition()).toEqual([1, 0]);
+                expect(rover.getDirection()).toEqual('W');
+            });
+            it('should wrap around both axes', () => {
+                const rover = new Rover([4, 0], 'E', gridSize);
+                rover.executeCommands(['F', 'F', 'R', 'F', 'F']);
+                expect(rover.getPosition()).toEqual([1, 2]);
+                expect(rover.getDirection()).toEqual('S');
+            });
         });
     });
 });

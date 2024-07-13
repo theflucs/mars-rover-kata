@@ -1,4 +1,4 @@
-import { Direction, GridSize, Position } from "../../types";
+import { Command, Direction, GridSize, Position } from "../../types";
 import { VALID_DIRECTIONS } from "../../constants";
 import { getNextPosition, isObstacle } from "./utils";
 
@@ -69,5 +69,26 @@ export class Rover {
 
     moveBackward(): void {
         this.move(false);
+    }
+
+    public executeCommands(commands: Command[]): void {
+        commands.forEach(command => {
+            switch (command) {
+                case 'L':
+                    this.turnLeft();
+                    break;
+                case 'R':
+                    this.turnRight();
+                    break;
+                case 'F':
+                    this.moveForward();
+                    break;
+                case 'B':
+                    this.moveBackward();
+                    break;
+                default:
+                    throw new Error(`Invalid command: ${command}`);
+            }
+        });
     }
 }
