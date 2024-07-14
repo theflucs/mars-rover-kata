@@ -1,4 +1,4 @@
-import { VALID_MOVEMENTS } from "../../constants";
+import { VALID_DIRECTIONS, VALID_MOVEMENTS } from "../../constants";
 import { Position, Direction, GridSize } from "../../types";
 
 export function isObstacle(position: Position, obstacles: Position[]): boolean {
@@ -25,4 +25,8 @@ export function getNextPosition(
 
 function applyPacmanEffect(coordinate: number, maxSize: number): number {
     return (coordinate + maxSize) % maxSize;
+}
+
+export function isValidDirection(direction: string): direction is Direction {
+    return VALID_DIRECTIONS.includes(direction as Direction);
 }
