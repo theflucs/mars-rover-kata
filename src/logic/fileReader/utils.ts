@@ -74,16 +74,22 @@ export function extractParts(line: string): Position {
 }
 
 /**
- * Parses a command string and returns an array of commands.
- * @param {string} commandsString - The string of commands to parse.
- * @returns {Command[]} - An array of commands to execute.
+ * Parses a string of multiple lines of commands and returns an array of command arrays.
+ * Each line in the input string represents a separate set of commands to execute.
+ * The function filters out invalid commands and converts all commands to uppercase.
+ * 
+ * @param {string} commandsString - A string of commands separated by new lines.
+ * Each line contains a sequence of command characters where each character is one of {L, R, F, B}.
+ * @returns {Command[][]} - An array of command arrays.
+ * Each inner array represents a sequence of valid commands extracted from one line of the input string.
  */
-export function parseCommands(commandsString: string): Command[] {
+export function parseCommands(commandsString: string): Command[][] {
     return commandsString
-        .toUpperCase()
-        .split('')
-        .filter(command => isValidCommand(command as Command))
-        .map(command => command as Command);
+        .split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => line.toUpperCase().split(''))
+        .filter(commands => commands.every(command => isValidCommand(command as Command)))
+        .map(commands => commands.map(command => command as Command));
 }
 
 function isValidCommand(command: Command): command is Command {
@@ -111,10 +117,16 @@ export function readObstacles(lines: string[]): Position[] {
     });
 }
 
-export function readCommands(lines: string[]): Command[] {
-    const commandsLine = lines.find(line => !line.startsWith('Size') && !line.startsWith('Obstacle'));
-    if (!commandsLine) {
+/**
+ * Reads and parses the commands from the given lines.
+ * @param {string[]} lines - The lines from the input file.
+ * @returns {Command[][]} - An array of arrays of commands to execute.
+ * @throws Will throw an error if no valid commands line is found.
+ */
+export function readCommands(lines: string[]): Command[][] {
+    const commandLines = lines.filter(line => !line.startsWith('Size') && !line.startsWith('Obstacle') && line.trim() !== '');
+    if (commandLines.length === 0) {
         throw new Error('Commands line is missing');
     }
-    return parseCommands(commandsLine);
+    return parseCommands(commandLines.join('\n'));
 }

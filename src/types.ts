@@ -6,5 +6,5 @@ export type Command = 'L' | 'R' | 'F' | 'B';
 export type InputFileReaderProps = {
     gridSize: GridSize;
     obstacles: Position[];
-    commands: Command[];
+    commands: Command[][];
 };

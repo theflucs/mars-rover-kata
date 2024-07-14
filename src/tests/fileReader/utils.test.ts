@@ -9,6 +9,7 @@ import {
     readObstacles,
     readCommands,
 } from '../../logic/fileReader/utils';
+import { Command } from '../../types';
 
 describe('parseGridSize', () => {
     it('should parse valid grid size', () => {
@@ -39,12 +40,23 @@ describe('parseObstacle', () => {
 });
 
 describe('parseCommands', () => {
-    it('should parse valid commands', () => {
-        expect(parseCommands('FRLB')).toEqual(['F', 'R', 'L', 'B']);
+    it('should parse commands from multiple lines correctly', () => {
+        const commandsString = 'RFF\nRF\nLFRFFLFFFLL';
+        const expected: Command[][] = [
+            ['R', 'F', 'F'],
+            ['R', 'F'],
+            ['L', 'F', 'R', 'F', 'F', 'L', 'F', 'F', 'F', 'L', 'L']
+        ];
+        expect(parseCommands(commandsString)).toEqual(expected);
     });
-
     it('should ignore invalid commands', () => {
-        expect(parseCommands('FRXLBYZ')).toEqual(['F', 'R', 'L', 'B']);
+        const commandsString = 'RFF\nRF\nLFRFFLFFFLL\nXYZ';
+        const expected: Command[][] = [
+            ['R', 'F', 'F'],
+            ['R', 'F'],
+            ['L', 'F', 'R', 'F', 'F', 'L', 'F', 'F', 'F', 'L', 'L']
+        ];
+        expect(parseCommands(commandsString)).toEqual(expected);
     });
 });
 
@@ -97,11 +109,52 @@ describe('parsers helper functions', () => {
 
     describe('readCommands', () => {
         it('should read commands from lines', () => {
-            expect(readCommands(['Size 5 4', 'Obstacle 1 2', 'FRLB'])).toEqual(['F', 'R', 'L', 'B']);
+            const lines = [
+                'Size 5 4',
+                'Obstacle 2 0',
+                'Obstacle 0 3',
+                'Obstacle 3 2',
+                'RFF',
+                'RF',
+                'LFRFFLFFFLL'
+            ];
+            const expected: Command[][] = [
+                ['R', 'F', 'F'],
+                ['R', 'F'],
+                ['L', 'F', 'R', 'F', 'F', 'L', 'F', 'F', 'F', 'L', 'L']
+            ];
+            expect(readCommands(lines)).toEqual(expected);
         });
 
         it('should throw error if commands are missing', () => {
-            expect(() => readCommands(['Size 5 4', 'Obstacle 1 2'])).toThrow('Commands line is missing');
+            const lines = [
+                'Size 5 4',
+                'Obstacle 2 0',
+                'Obstacle 0 3',
+                'Obstacle 3 2'
+            ];
+            expect(() => readCommands(lines)).toThrow('Commands line is missing');
+        });
+
+        it('should ignore lines without commands', () => {
+            const lines = [
+                'Size 5 4',
+                'Obstacle 2 0',
+                'Obstacle 0 3',
+                'Obstacle 3 2',
+                '',
+                ' ',
+                'RFF',
+                '   ',
+                'RF',
+                'LFRFFLFFFLL'
+            ];
+            const expected: Command[][] = [
+                ['R', 'F', 'F'],
+                ['R', 'F'],
+                ['L', 'F', 'R', 'F', 'F', 'L', 'F', 'F', 'F', 'L', 'L']
+            ];
+            expect(readCommands(lines)).toEqual(expected);
         });
     });
 })
