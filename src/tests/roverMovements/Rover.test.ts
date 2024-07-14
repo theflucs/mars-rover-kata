@@ -1,5 +1,5 @@
 import { Rover } from "../../logic/roverMovements/Rover";
-import { Command, Direction, GridSize, Position } from "../../types";
+import { Direction, GridSize, Position } from "../../types";
 
 describe('Rover class', () => {
     const initialPosition: Position = [0, 0];
