@@ -8,3 +8,12 @@ export const VALID_MOVEMENTS: ReadonlyMap<Direction, GridSize> = new Map([
     ['W', [-1, 0]]
 ]);
 export const VALID_COMMANDS: Command[] = ['L', 'R', 'F', 'B'];
+export const GRID_DIRECTIONS: Record<Direction, string> = {
+    'N': '↑',
+    'E': '→',
+    'S': '↓',
+    'W': '←'
+};
+export const GREEN = '\x1b[32m';
+export const RED = '\x1b[31m';
+export const RESET = '\x1b[0m';
