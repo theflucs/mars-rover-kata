@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "pnpm run build && node dist/index.js",
+    "dev": "pnpm start src/input.txt",
     "build": "tsc",
     "test": "jest",
     "test:clear": "jest --clearCache",

@@ -1,56 +1,10 @@
-# Esercizio Mars Rover kata
+# Mars Rover kata 🚀
 
-<details>
-<summary>Esercizio</summary>
-Implementare un'applicazione la quale simuli lo spostamento di un veicolo su un pianeta seguendo le regole del Mars Rover Kata (riportate sotto per completezza).
+## Descrizione
 
-L’applicazione dovrà:
+L'applicazione Mars Rover Kata simula il movimento di un rover su un pianeta a griglia seguendo le regole del [Mars Rover Kata](https://kata-log.rocks/mars-rover-kata). L'applicazione legge un file di testo contenente la mappa del mondo e le stringhe di comando, quindi stampa la posizione del rover dopo l'esecuzione di ogni stringa di comandi.
 
-1. leggere un file di testo contenente:
-    - la mappa del mondo sul quale il rover dovrà muoversi;
-    - le stringhe di comandi da inviare al rover;
-2. stampare a video o su file, la posizione del rover dopo l’esecuzione di ogni stringa di comandi.
-</details>
-
-<details>
-<summary>Rules</summary>
-Le regole da implementare sono le seguenti:
-
-● il rover si muove su una griglia;
-
-● il rover parte dalla posizione 0, 0, N dove:
-
-    ○ 0,0 sono delle coordinate X, Y sulla griglia;
-
-    ○ N è la direzione verso cui è rivolto il rover.
-
-Le direzioni possibili sono quattro:
-
-N (North), E (East) S (South) e W (West);
-
-● al rover può essere passata una stringa di comandi, dove ogni comando è
-rappresentato da un carattere:
-
-    ○ L - left, per far ruotare di 90 gradi il rover verso sinistra;
-
-    ○ R - right, per far ruotare di 90 gradi il rover verso destra;
-
-    ○ F - forward, per far muovere il rover di una casella nella direzione verso cui è rivolto;
-
-    ○ B - backward, per far muovere il rover di una casella nella direzione opposta a quella verso cui è rivolto;
-
-● quando il rover raggiunge il bordo della griglia e continua a muoversi riparte dal lato opposto della griglia (il noto effetto pac-man);
-
-● la griglia può contenere degli ostacoli. Quando il rover incontra un ostacola non può muoversi in quella direzione;
-
-● una volta eseguita una stringa di comandi il rover deve rispondere al centro di
-controllo con una stringa che ne rappresenta la posizione sulla griglia.
-
-La stringa deve avere il seguente formato:
-
-`[O:] X: Y: Direzione`, dove `X` e `Y` sono i valori delle coordinate sulla griglia mentre `Direzione` è la lettera che rappresenta la direzione verso cui è diretto il rover. La O iniziale viene stampata solo nel caso in cui l’ultimo comando abbia fatto sbattere il rover contro un ostacolo. Ad esempio: `1:1:N` oppure `O:2:5:S`.
-
-</details>
+Questa implementazione dimostra la gestione delle griglie, l'esecuzione dei comandi e la visualizzazione di base nel terminale.
 
 ## Requisiti
 
@@ -58,13 +12,20 @@ Assicurati di avere [node](https://nodejs.org/en/download/prebuilt-installer) e 
 
 ## Installazione
 
+### 1. Clona il Repository
+
+```
+git clone https://github.com/tuo-username/mars-rover-kata.git
+cd mars-rover-kata
+```
+
 ### Installa le dipendenze:
 
 `pnpm install`
 
 ### Avvia il progetto:
 
-`pnpm start`
+`pnpm dev`
 
 ### Esecuzione dei test
 
@@ -76,3 +37,53 @@ Per eseguire i test, utilizza il comando:
 
 - `TypeScript`
 - `Jest`
+
+## Struttura del Progetto
+
+La struttura del progetto è definita nel file `projectStructure.txt`.
+
+## Implementazione
+
+### Approccio TDD
+
+L'applicazione è stata sviluppata utilizzando il **Test-Driven Development (TDD)**, garantendo che ogni parte del codice fosse coperta da test prima dell'implementazione effettiva. Questo approccio ha aiutato a mantenere alta la qualità del codice e a rilevare tempestivamente eventuali errori.
+
+### Come Funziona
+
+#### 1. Lettura del File di Input:
+
+Il file `input.txt` viene letto e analizzato, utilizzando il modulo `fs` di `Node.js`, per estrarre la dimensione della griglia, la posizione degli ostacoli e le sequenze di comandi.
+
+#### 2. Inizializzazione del Rover:
+
+Il rover inizia dalla posizione (0, 0) rivolto verso Nord (N).
+
+#### 3. Esecuzione dei Comandi:
+
+Ogni stringa di comandi viene eseguita sequenzialmente. I comandi sono:
+
+- L - Sinistra (ruota a sinistra di 90 gradi)
+- R - Destra (ruota a destra di 90 gradi)
+- F - Avanti (muove il rover di una cella nella direzione attuale)
+- B - Indietro (muove il rover di una cella nella direzione opposta)
+
+#### 4. Gestione degli Ostacoli:
+
+Se il rover incontra un ostacolo durante il movimento, si ferma e segnala la collisione nell'output.
+
+#### 5. Effetto Pac-Man:
+
+Se il rover raggiunge il bordo della griglia e continua a muoversi, ricompare dal lato opposto della griglia.
+
+#### 6. Visualizzazione della Griglia:
+
+Lo stato della griglia viene visualizzato nel terminale, mostrando la posizione e la direzione del rover e gli ostacoli.
+
+#### 7. Output:
+
+L'output include un riepilogo dei comandi del rover e dello stato finale della griglia, nel formato `[O:]<X>:<Y>:<Direzione>`.
+
+Dove `<X> e <Y>` sono i valori delle coordinate sulla griglia mentre `<Direzione>` è la lettera che rappresenta la direzione verso cui è diretto il rover.
+
+La `O` iniziale viene stampata solo nel caso in cui l’ultimo comando abbia fatto sbattere il rover contro un ostacolo.
+Ad esempio: `1:1:N` oppure `O:2:5:S`.

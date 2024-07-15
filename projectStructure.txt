@@ -1,0 +1,33 @@
+project-root/
+├── src/
+│   ├── logic/
+│   │   ├── fileReader/                 // module to read and parse the input file
+│   │   │   ├── inputFileReader.ts      // function to read the input file
+│   │   │   └── utils.ts                // utilities for file reading
+│   │   │
+│   │   ├── roverMovements/             // module for rover movements
+│   │   │   ├── Rover.ts                // Rover class with movement logic
+│   │   │   └── utils.ts                // utilities for movements
+│   │   │
+│   ├── terminalUI/                     // logic for terminal UI visualization
+│   │   ├── drawInitialGrid.ts          // function to draw the initial grid
+│   │   └── drawGridCommand.ts          // function to draw the grid after a command
+│   │
+│   ├── tests/
+│   │   ├── fileReader/                 // tests for input file reading
+│   │   │   ├── inputFileReader.test.ts
+│   │   │   └── utils.test.ts
+│   │   │
+│   │   ├── roverMovements/             // tests for rover movements
+│   │   │   ├── Rover.test.ts
+│   │   │   └── utils.test.ts
+│   │   │
+│   │   └── terminalUI/                 // tests for terminal UI visualization
+│   │       ├── drawInitialGrid.test.ts
+│   │       └── drawGridCommand.test.ts
+│   │
+│   ├── constants.ts                    // globally shared constants
+│   └── types.ts                        // globally shared types
+├── jest.config.js
+├── package.json
+└── tsconfig.json
