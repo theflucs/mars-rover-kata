@@ -1,18 +1,43 @@
 import { writeFileSync } from 'fs';
 import { inputFileReader } from './logic/fileReader/inputFileReader';
 import { Rover } from './logic/roverMovements/Rover';
+import { GREEN, RESET } from './constants';
+import { drawInitialGrid } from './terminalUI/drawInitialGrid';
+import { drawGridCommand } from './terminalUI/drawGridCommand';
 
 export function main(filePath: string): void {
     try {
         const { gridSize, obstacles, commands } = inputFileReader(filePath);
         const rover = new Rover([0, 0], 'N', gridSize, obstacles);
 
-        const results: string[] = commands.map(commandSequence => {
-            return rover.executeCommands(commandSequence);
-        });
+        let output = '';
+        let gridOutput = '';
 
-        const output = results.join('\n');
-        console.log(`Output:\n${output}`);
+        const initialPositionVisualization = drawInitialGrid(
+            gridSize,
+            rover.getPosition(),
+            rover.getDirection(),
+            obstacles
+        );
+        gridOutput += initialPositionVisualization + '\n';
+
+        let executedCommands: string[] = [];
+
+        commands.forEach((commandSequence) => {
+            const result = rover.executeCommands(commandSequence);
+            executedCommands.push(result);
+            output += result + '\n';
+            gridOutput += `Commands: ${commandSequence}\n`;
+            gridOutput += `Position: ${GREEN}${result}${RESET}\n`;
+            const gridVisualization = drawGridCommand(
+                gridSize,
+                rover.getPosition(),
+                rover.getDirection(),
+                obstacles
+            );
+            gridOutput += gridVisualization + '\n';
+        });
+        console.log(gridOutput);
         writeFileSync('output.txt', output);
     } catch (error) {
         if (error instanceof Error) {
