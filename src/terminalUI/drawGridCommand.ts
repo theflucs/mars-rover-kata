@@ -23,7 +23,7 @@ export function drawGridCommand(
                 output += '   │';
             }
         }
-        output += ` ${y}\n`;
+        output += `\n`;
 
         if (y > 0) {
             output += '  ├' + '───┼'.repeat(width - 1) + '───┤\n';
