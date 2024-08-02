@@ -2,21 +2,21 @@ import { writeFileSync } from 'fs';
 import { inputFileReader } from './logic/fileReader/inputFileReader';
 import { Rover } from './logic/roverMovements/Rover';
 import { GREEN, RESET } from './constants';
-import { drawInitialGrid } from './terminalUI/drawInitialGrid';
-import { drawGridCommand } from './terminalUI/drawGridCommand';
+import { drawGrid } from './terminalUI/drawGrid';
 import { Command, GridSize, Position } from './types';
 
 function runLogic(gridSize: GridSize, obstacles: Position[], rover: Rover, commands: Command[][]) {
     let output = '';
     let gridOutput = '';
 
-    const initialPositionVisualization = drawInitialGrid(
+    const initialPositionVisualization = drawGrid(
         gridSize,
         rover.getPosition(),
         rover.getDirection(),
         obstacles
     );
 
+    gridOutput += `Initial Position: ${GREEN}${rover.getPosition()}, ${rover.getDirection()}${RESET}\n`;
     gridOutput += initialPositionVisualization + '\n';
 
     let executedCommands: string[] = [];
@@ -25,9 +25,11 @@ function runLogic(gridSize: GridSize, obstacles: Position[], rover: Rover, comma
         const result = rover.executeCommands(commandSequence);
         executedCommands.push(result);
         output += result + '\n';
+
         gridOutput += `Commands: ${commandSequence}\n`;
         gridOutput += `Position: ${GREEN}${result}${RESET}\n`;
-        const gridVisualization = drawGridCommand(
+
+        const gridVisualization = drawGrid(
             gridSize,
             rover.getPosition(),
             rover.getDirection(),
