@@ -2,7 +2,7 @@ import { writeFileSync } from 'fs';
 import { inputFileReader } from './logic/fileReader/inputFileReader';
 import { Rover } from './logic/roverMovements/Rover';
 import { GREEN, RESET } from './constants';
-import { drawGrid } from './terminalUI/drawGrid';
+import { doNotFormat, drawGrid, makeGreen } from './terminalUI/drawGrid';
 import { Command, GridSize, Position } from './types';
 
 function runLogic(gridSize: GridSize, obstacles: Position[], rover: Rover, commands: Command[][]) {
@@ -14,9 +14,8 @@ function runLogic(gridSize: GridSize, obstacles: Position[], rover: Rover, comma
         rover.getPosition(),
         rover.getDirection(),
         obstacles,
-        true,
+        makeGreen,
     );
-
     gridOutput += `Initial Position: ${GREEN}${rover.getPosition()}, ${rover.getDirection()}${RESET}\n`;
     gridOutput += initialPositionVisualization + '\n';
 
@@ -35,7 +34,7 @@ function runLogic(gridSize: GridSize, obstacles: Position[], rover: Rover, comma
             rover.getPosition(),
             rover.getDirection(),
             obstacles,
-            false
+            doNotFormat
         );
         gridOutput += gridVisualization + '\n';
     });

@@ -1,12 +1,20 @@
 import { GRID_DIRECTIONS, GREEN, RESET, RED } from "../constants";
 import { Direction, GridSize, Position } from "../types";
 
+export const makeGreen = (txt: string) => {
+    return `${GREEN}${txt}${RESET}`
+}
+
+export const doNotFormat = (txt: string) => {
+    return txt;
+}
+
 export function drawGrid(
     gridSize: GridSize,
     roverPosition: Position,
     roverDirection: Direction,
     obstacles: Position[],
-    isInitialPosition: Boolean
+    formatRoverPosition: (txt: string) => string
 ): string {
     const [width, height] = gridSize;
     let output = '';
@@ -17,11 +25,7 @@ export function drawGrid(
         output += `${y} │`;
         for (let x = 0; x < width; x++) {
             if (x === roverPosition[0] && y === roverPosition[1]) {
-                if (isInitialPosition) {
-                    output += ` ${GREEN}${GRID_DIRECTIONS[roverDirection]}${RESET} │`;
-                } else {
-                    output += ` ${GRID_DIRECTIONS[roverDirection]} │`;
-                }
+                output += " " + formatRoverPosition(GRID_DIRECTIONS[roverDirection]) + " │";
             } else if (obstacles.some(obs => obs[0] === x && obs[1] === y)) {
                 output += ` ${RED}■${RESET} │`;
             } else {
