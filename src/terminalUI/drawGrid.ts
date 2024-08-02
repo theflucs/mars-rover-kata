@@ -5,7 +5,8 @@ export function drawGrid(
     gridSize: GridSize,
     roverPosition: Position,
     roverDirection: Direction,
-    obstacles: Position[]
+    obstacles: Position[],
+    isInitialPosition: Boolean
 ): string {
     const [width, height] = gridSize;
     let output = '';
@@ -16,7 +17,11 @@ export function drawGrid(
         output += `${y} │`;
         for (let x = 0; x < width; x++) {
             if (x === roverPosition[0] && y === roverPosition[1]) {
-                output += ` ${GRID_DIRECTIONS[roverDirection]} │`;
+                if (isInitialPosition) {
+                    output += ` ${GREEN}${GRID_DIRECTIONS[roverDirection]}${RESET} │`;
+                } else {
+                    output += ` ${GRID_DIRECTIONS[roverDirection]} │`;
+                }
             } else if (obstacles.some(obs => obs[0] === x && obs[1] === y)) {
                 output += ` ${RED}■${RESET} │`;
             } else {

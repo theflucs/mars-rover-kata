@@ -13,7 +13,8 @@ function runLogic(gridSize: GridSize, obstacles: Position[], rover: Rover, comma
         gridSize,
         rover.getPosition(),
         rover.getDirection(),
-        obstacles
+        obstacles,
+        true,
     );
 
     gridOutput += `Initial Position: ${GREEN}${rover.getPosition()}, ${rover.getDirection()}${RESET}\n`;
@@ -33,7 +34,8 @@ function runLogic(gridSize: GridSize, obstacles: Position[], rover: Rover, comma
             gridSize,
             rover.getPosition(),
             rover.getDirection(),
-            obstacles
+            obstacles,
+            false
         );
         gridOutput += gridVisualization + '\n';
     });
